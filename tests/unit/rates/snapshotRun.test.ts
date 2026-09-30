@@ -59,5 +59,6 @@ function summary(): SafeLiveRateRunSummary {
     snapshots: Object.freeze([]),
     failures: Object.freeze([]),
     skippedSources: Object.freeze([]),
+    breakerEvents: Object.freeze([]),
   });
 }

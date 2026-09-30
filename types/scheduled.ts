@@ -1,4 +1,4 @@
-import type { RateEngineFailure } from "@/types/rates";
+import type { RateEngineBreakerEvent, RateEngineFailure } from "@/types/rates";
 
 export type ScheduledRateFailure = RateEngineFailure | Readonly<{
   phase: "PREPARATION";
@@ -20,6 +20,8 @@ export type ScheduledRefreshResult = Readonly<{
     failed: number;
     skipped: number;
     failures: readonly ScheduledRateFailure[];
+    /** Issue #167: breaker transitions and suppressions, audit-only evidence. */
+    breakerEvents: readonly RateEngineBreakerEvent[];
   }>;
   reputation: Readonly<{
     attempted: number;

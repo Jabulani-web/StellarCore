@@ -63,6 +63,9 @@ function toScheduledRates(summary: SafeLiveRateRunSummary): ScheduledRefreshResu
     failed: summary.failed,
     skipped: summary.skipped,
     failures: Object.freeze(summary.failures.map((failure) => Object.freeze({ ...failure }))),
+    breakerEvents: Object.freeze(
+      summary.breakerEvents.map((event) => Object.freeze({ ...event })),
+    ),
   });
 }
 
@@ -77,5 +80,6 @@ function preparationFailure(): ScheduledRefreshResult["rates"] {
     failed: 1,
     skipped: 0,
     failures: Object.freeze([failure]),
+    breakerEvents: Object.freeze([]),
   });
 }

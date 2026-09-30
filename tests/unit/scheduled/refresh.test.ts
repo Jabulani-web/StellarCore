@@ -28,7 +28,7 @@ test("scheduled refresh ingests rates before evaluating reputation and returns a
     ok: true,
     startedAt: STARTED_AT.toISOString(),
     completedAt: COMPLETED_AT.toISOString(),
-    rates: { attempted: 1, succeeded: 1, failed: 0, skipped: 0, failures: [] },
+    rates: { attempted: 1, succeeded: 1, failed: 0, skipped: 0, failures: [], breakerEvents: [] },
     reputation: { attempted: 3, succeeded: 3, failed: 0, failures: [] },
   });
   assert.equal(Object.isFrozen(result), true);
@@ -43,6 +43,7 @@ test("a rate source partial failure is reported while reputation still evaluates
       failed: 1,
       snapshotsPersisted: 0,
       failures: [{ anchorSlug: "zeam", corridorSlug: "usdc-us-brl-br", phase: "QUOTE", code: "QUOTE_FAILURE" }],
+      breakerEvents: [],
     }),
     evaluateReputation: async () => {
       evaluated = true;
@@ -85,6 +86,7 @@ test("a rate preparation failure is safely serialized and does not prevent reput
     failed: 1,
     skipped: 0,
     failures: [{ phase: "PREPARATION", code: "LIVE_RATE_PREPARATION_FAILURE" }],
+    breakerEvents: [],
   });
   assert.equal(JSON.stringify(result).includes("should-not-leak"), false);
 });
@@ -141,6 +143,7 @@ function rateSummary(overrides: Partial<SafeLiveRateRunSummary> = {}): SafeLiveR
     snapshots: [],
     failures: [],
     skippedSources: [],
+    breakerEvents: [],
     ...overrides,
   });
 }

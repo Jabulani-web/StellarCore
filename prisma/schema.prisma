@@ -46,6 +46,16 @@ enum ReputationState {
   @@map("reputation_state")
 }
 
+/// Issue #167: durable per-source circuit-breaker state for reviewed
+/// live-rate sources. Keyed to the reviewed source identity.
+enum SourceBreakerState {
+  CLOSED
+  OPEN
+  HALF_OPEN
+
+  @@map("source_breaker_state")
+}
+
 model Anchor {
   id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   slug              String            @unique
@@ -165,6 +175,31 @@ model TransferOutcome {
 
   @@index([anchorId, recordedAt(sort: Desc)], map: "transfer_outcomes_anchor_id_recorded_at_idx")
   @@map("transfer_outcomes")
+}
+
+/// One circuit-breaker row per reviewed live-rate source identity.
+/// Survives process restarts; concurrent workers coordinate through
+/// guarded writes on `recoveryProbeToken` and `recoveryProbesActive`.
+model SourceBreaker {
+  anchorSlug                     String             @map("anchor_slug")
+  corridorSlug                   String             @map("corridor_slug")
+  state                          SourceBreakerState @default(CLOSED)
+  consecutiveTransportFailures   Int                @default(0) @map("consecutive_transport_failures")
+  consecutiveOpens               Int                @default(0) @map("consecutive_opens")
+  recentInvalidEvidenceFailures  Int                @default(0) @map("recent_invalid_evidence_failures")
+  openAt                         DateTime?          @map("open_at") @db.Timestamptz(6)
+  cooldownUntil                  DateTime?          @map("cooldown_until") @db.Timestamptz(6)
+  recoveryProbeToken             String?            @map("recovery_probe_token")
+  recoveryProbeDeadline          DateTime?          @map("recovery_probe_deadline") @db.Timestamptz(6)
+  recoveryProbesActive           Int                @default(0) @map("recovery_probes_active")
+  windowStartAt                  DateTime           @default(now()) @map("window_start_at") @db.Timestamptz(6)
+  lastFailureAt                  DateTime?          @map("last_failure_at") @db.Timestamptz(6)
+  lastSuccessAt                  DateTime?          @map("last_success_at") @db.Timestamptz(6)
+  updatedAt                      DateTime           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@id([anchorSlug, corridorSlug])
+  @@index([state, cooldownUntil], map: "source_breakers_state_cooldown_until_idx")
+  @@map("source_breakers")
 }
 
 model ReputationScore {

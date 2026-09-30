@@ -32,4 +32,6 @@ export type SafeLiveRateRunSummary = Readonly<{
   }>[];
   failures: RateEngineResult["failures"];
   skippedSources: RateEngineResult["skippedSources"];
+  /** Issue #167: durable breaker transitions and suppressions for this run. */
+  breakerEvents: RateEngineResult["breakerEvents"];
 }>;

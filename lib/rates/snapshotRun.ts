@@ -6,6 +6,7 @@ import {
 } from "@/lib/rates/liveRateSource";
 import { runRateEngine } from "@/lib/rates/rateEngine";
 import { PRISMA_RATE_SNAPSHOT_REPOSITORY } from "@/lib/rates/snapshot";
+import { PRISMA_SOURCE_BREAKER_STORE } from "@/lib/rates/sourceBreakerStore";
 import type {
   PreparedLiveRateCandidate,
   SafeLiveRateRunSummary,
@@ -37,6 +38,7 @@ const DEFAULT_DEPENDENCIES = Object.freeze({
     await runRateEngine(candidates, {
       quote: fetchReviewedIndicativeRate,
       repository: PRISMA_RATE_SNAPSHOT_REPOSITORY,
+      breaker: PRISMA_SOURCE_BREAKER_STORE,
     }),
   ),
 }) satisfies SnapshotReviewedLiveRatesDependencies;

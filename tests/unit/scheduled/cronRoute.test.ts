@@ -42,6 +42,7 @@ test("authorized scheduled requests return only bounded JSON and preserve partia
     failed: 1,
     skipped: 0,
     failures: [{ phase: "PREPARATION", code: "LIVE_RATE_PREPARATION_FAILURE" }],
+    breakerEvents: [],
   } });
   const response = await getScheduledRefreshResponse(
     new Request("http://localhost/api/internal/cron/refresh", {
@@ -85,7 +86,7 @@ function successfulRun(overrides: Partial<ScheduledRefreshResult> = {}): Schedul
     ok: true,
     startedAt: "2026-08-31T16:00:00.000Z",
     completedAt: "2026-08-31T16:00:01.000Z",
-    rates: Object.freeze({ attempted: 1, succeeded: 1, failed: 0, skipped: 0, failures: [] }),
+    rates: Object.freeze({ attempted: 1, succeeded: 1, failed: 0, skipped: 0, failures: [], breakerEvents: [] }),
     reputation: Object.freeze({ attempted: 3, succeeded: 3, failed: 0, failures: [] }),
     ...overrides,
   });

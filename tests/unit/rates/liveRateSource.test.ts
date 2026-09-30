@@ -121,6 +121,7 @@ test("safe summary excludes remote metadata and retains only normalized snapshot
     failed: 0,
     skipped: 0,
     snapshotsPersisted: 1,
+    breakerEvents: Object.freeze([]),
     snapshots: Object.freeze([Object.freeze({
       id: "snapshot-1",
       anchorSlug: "zeam",

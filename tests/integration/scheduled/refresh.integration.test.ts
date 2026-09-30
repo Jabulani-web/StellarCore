@@ -20,6 +20,7 @@ test("controlled scheduled integration passes one persisted evaluation time from
         snapshots: [],
         failures: [],
         skippedSources: [],
+        breakerEvents: [],
       };
     },
     evaluateReputation: async ({ evaluatedAt }) => {

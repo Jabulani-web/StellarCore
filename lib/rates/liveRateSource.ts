@@ -106,6 +106,7 @@ export function formatLiveRateRunSummary(
     }))),
     failures: result.failures,
     skippedSources: result.skippedSources,
+    breakerEvents: result.breakerEvents,
   });
 }
 

@@ -134,6 +134,12 @@ For each reviewed candidate, StellarCore first validates the pair through the
 anchor's SEP-38 `/prices` endpoint, then reads an indicative price from
 `/price`. It does not call the firm `/quote` lifecycle.
 
+A repeatedly failing source is protected by a durable per-source circuit
+breaker (closed/open/half-open with bounded cooldowns and single recovery
+probes); suppressed sources are skipped without network attempts and never
+persist observations. The normative policy lives in
+[docs/source-breaker-policy.md](docs/source-breaker-policy.md).
+
 Rates are stored as timestamped snapshots. A rate is considered **stale** when it is older than `RATE_FRESHNESS_THRESHOLD_MS` (default: 120 seconds).
 
 #### Staleness-Aware Median
